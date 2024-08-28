@@ -20,6 +20,7 @@ using Remelites.Database.Context;
 using Remelites.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
+using Lavalink4NET.Extensions;
 
 namespace Remelites.Commands.Slash
 {
@@ -221,7 +222,7 @@ namespace Remelites.Commands.Slash
                 return;
             }
 
-			if(player.State  == PlayerState.Paused) 
+			if(player.State == PlayerState.Paused) 
 			{
 				await interactionContext.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(
 					new DiscordEmbedBuilder()
@@ -433,10 +434,18 @@ namespace Remelites.Commands.Slash
 			if (track == null || track.Track == null)
 				embed.Description = "Nothing is playing.";
 			else
+			{
 				embed.Description = $"Now playing: {track.Track.Title} " +
 					$"[{player.Position.Value.Position.ToDurationString()}/{track.Track.Duration.ToDurationString()}].";
 
-
+				await interactionContext.Member.SendMessageAsync(new DiscordEmbedBuilder()
+				{
+					Color = DiscordColor.Black,
+					Title = track.Track.Title,
+					Url = track.Track.Uri.ToString(),
+					ImageUrl = track.Track.ArtworkUri.ToString()
+				});
+			}
 			await interactionContext.EditResponseAsync(new DiscordWebhookBuilder()
 				.AddEmbed(embed));
 		}
@@ -483,7 +492,6 @@ namespace Remelites.Commands.Slash
 				return;
 			}
 
-
 			await interactionContext.EditResponseAsync(new DiscordWebhookBuilder()
 				.AddEmbed(new DiscordEmbedBuilder()
 				{
@@ -494,7 +502,7 @@ namespace Remelites.Commands.Slash
 				}));
 		}
 
-		[SlashCommand("trackmessage", "Toggle showing message at the beginning of a track.")]
+		[SlashCommand("trackmessage", "Toggle the display of the message at the beginning of the track.")]
 		public async Task TrackMessage(InteractionContext interactionContext)
 		{
 			await interactionContext.DeferAsync();
@@ -516,6 +524,72 @@ namespace Remelites.Commands.Slash
 				}));
 		}
 
+		//[SlashCommand("filter", "Toggle showing message at the beginning of a track.")]
+		//public async Task Filter(InteractionContext interactionContext, [Option("filter", "filter mode")] FilterMode mode = FilterMode.Disable)
+		//{
+		//	await interactionContext.DeferAsync();
+		//	var player = await GetPlayerAsync(interactionContext, connectToVoiceChannel: false).ConfigureAwait(false);
+
+		//	if (player is null)
+		//	{
+		//		return;
+		//	}
+
+		//	await mode.UseFilter(player);
+
+		//	await interactionContext.EditResponseAsync(new DiscordWebhookBuilder()
+		//		.AddEmbed(new DiscordEmbedBuilder()
+		//		{
+		//			Description = $"Filter applied"
+		//		}));
+		//}
+
+		//[SlashCommand("lyrics", description: "Searches for lyrics")]
+		//public async Task Lyrics(InteractionContext interactionContext)
+		//{
+		//	await interactionContext.DeferAsync();
+
+		//	var player = await GetPlayerAsync(interactionContext, connectToVoiceChannel: false).ConfigureAwait(false);
+
+		//	if (player is null)
+		//	{
+		//		return;
+		//	}
+
+		//	var track = player.CurrentTrack;
+
+		//	if (track is null)
+		//	{
+		//		await interactionContext.EditResponseAsync(new DiscordWebhookBuilder()
+		//		.AddEmbed(new DiscordEmbedBuilder()
+		//		{
+		//			Description = "No track is currently playing."
+		//		}));
+		//		return;
+		//	}
+
+		//	var result = await _audioService.Tracks.SearchLyricsAsync("Queen - Bohemian Rhapsody").ConfigureAwait(false);
+			
+		//	var videoId = result.First().VideoId;
+		//	var lyrics = await _audioService.Tracks.GetYouTubeLyricsAsync(videoId).ConfigureAwait(false);
+
+		//	if (lyrics is null)
+		//	{
+		//		await interactionContext.EditResponseAsync(new DiscordWebhookBuilder()
+		//		.AddEmbed(new DiscordEmbedBuilder()
+		//		{
+		//			Description = "No lyrics found."
+		//		}));
+		//		return;
+		//	}
+
+		//	await interactionContext.EditResponseAsync(new DiscordWebhookBuilder()
+		//		.AddEmbed(new DiscordEmbedBuilder()
+		//		{
+		//			Description = $"Lyrics for {track.Title} by {track.Author}:\n{lyrics.Text}"
+		//		}));
+		//}
+
 		private async ValueTask<CustomPlayer?> GetPlayerAsync(InteractionContext interactionContext, bool connectToVoiceChannel = true)
         {
             ArgumentNullException.ThrowIfNull(interactionContext);
@@ -523,12 +597,12 @@ namespace Remelites.Commands.Slash
             var retrieveOptions = new PlayerRetrieveOptions(
                 ChannelBehavior: connectToVoiceChannel ? PlayerChannelBehavior.Join : PlayerChannelBehavior.None);
 
-            var playerOptions = new CustomPlayerOptions { HistoryCapacity = 1000 , DisconnectOnStop = false};
-
 			var options = new CustomPlayerOptions()
 			{
 				TextChannel = interactionContext.Channel,
-				GuildId = interactionContext.Guild.Id
+				GuildId = interactionContext.Guild.Id,
+				HistoryCapacity = 1000,
+				DisconnectOnStop = false
 			};
 
 			var result = await _audioService.Players

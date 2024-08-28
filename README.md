@@ -32,17 +32,23 @@ server:
 plugins:
   youtube:
     enabled: true
-    clients: ["MUSIC", "WEB"]
+    allowSearch: true
+    allowDirectVideoIds: true
+    allowDirectPlaylistIds: true
+    clients: 
+      - MUSIC
+      - WEB
+      - ANDROID_MUSIC
 lavalink:
   plugins:
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.1.0"
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.5.2"
       snapshot: false
   server:
     password: "youshallnotpass"
     sources:
       youtube: false
       bandcamp: false
-      soundcloud: true
+      soundcloud: false
       twitch: false
       vimeo: false
       nico: false
