@@ -6,7 +6,7 @@
 ## Requirements
  * .NET 8.0 runtime
  * [JDK 17.0.2](https://jdk.java.net/archive/)
- * [Lavalink 4.0.5](https://github.com/lavalink-devs/Lavalink/releases)
+ * [Lavalink 4.0.8](https://github.com/lavalink-devs/Lavalink/releases)
    
 
 ## Configuration
@@ -39,6 +39,8 @@ plugins:
       - MUSIC
       - WEB
       - ANDROID_MUSIC
+      - ANDROID_TESTSUITE
+      - TVHTML5EMBEDDED
 lavalink:
   plugins:
     - dependency: "dev.lavalink.youtube:youtube-plugin:1.5.2"
