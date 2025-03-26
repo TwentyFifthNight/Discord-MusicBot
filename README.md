@@ -23,6 +23,9 @@
 
 ## Lavalink Settings
  An example application.yml file can be found at this [link](https://github.com/lavalink-devs/Lavalink/blob/master/LavalinkServer/application.yml.example/). You can also copy my application.yml options. Remember to change the **port**, **address** and **password** to match the values in the **appsettings.json file**. 
+
+> [!IMPORTANT]   
+> Now you will most likely have to use OAuth Tokens to make the bot work. With the updated contents of the application.yml file below, you should be asked by Lavalink to give youtube-source access to your account at Lavalink startup. Correct authorization should result in your token being displayed in a terminal running Lavalink. You can copy the obtained token into the application.yml file as the value of the "refreshToken" key and uncomment it by removing the "#" symbol. Using your main account for authorization is not recommended. For more information visit [link](https://github.com/lavalink-devs/youtube-source?tab=readme-ov-file#using-oauth-tokens).
 ```
 server:
   port: 2333
@@ -37,13 +40,14 @@ plugins:
     allowDirectPlaylistIds: true
     clients: 
       - MUSIC
-      - WEB
-      - ANDROID_MUSIC
-      - ANDROID_TESTSUITE
+      - ANDROID_VR
       - TVHTML5EMBEDDED
+    oauth:
+      enabled: true
+    #  refreshToken: "your token"
 lavalink:
   plugins:
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.5.2"
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.12.0"
       snapshot: false
   server:
     password: "youshallnotpass"
@@ -94,7 +98,7 @@ logging:
   level:
     root: INFO
     lavalink: INFO
-
+    dev.lavalink.youtube.http.YoutubeOauth2Handler: INFO
   request:
     enabled: true
     includeClientInfo: true
