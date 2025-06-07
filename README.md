@@ -22,6 +22,7 @@
  To invite bot go to the [Discord Developer page](https://discord.com/developers/applications/), select your bot and  go to the OAuth2 tab. Scroll down and check the **applications.commands** and **bot** checkboxes. Bot permissions should have appeard. Check **Read Messages/View Channels**, **Send Messages**, **Manage Messages**, **Embed Links**, **Read Message History**, **Add Reactions**, **Connect** and **Speak** permissons checkboxes. Copy generated URL and paste it into your browser. Choose server and click **Authorize** button.
 
 ## Lavalink Settings
+<!--
 > [!IMPORTANT]
 > For now, the latest youtube plugin (1.13.0) for Lavalink does not work. The fix is already merged into the youtube-source repository, so until the new version is available, you can fork the [youtube-source repository](https://github.com/lavalink-devs/youtube-source) and build the plugin yourself. After placing the new .jar file in the Lavalink plugins folder, comment out the plugin in the application.yml file, otherwise it will overwrite your file.
 ```
@@ -30,6 +31,7 @@ lavalink:
     #- dependency: "dev.lavalink.youtube:youtube-plugin:1.13.0"
     #  snapshot: false
 ```
+-->
 
 > [!IMPORTANT]   
 > You will most likely have to use OAuth Tokens to make the bot work. With the updated contents of the application.yml file below, you should be asked by Lavalink to give youtube-source access to your account at Lavalink startup. Correct authorization should result in your token being displayed in a terminal running Lavalink. You can copy the obtained token into the application.yml file as the value of the "refreshToken" key and uncomment it by removing the "#" symbol. Using your main account for authorization is not recommended. For more information visit [link](https://github.com/lavalink-devs/youtube-source?tab=readme-ov-file#using-oauth-tokens).
@@ -57,7 +59,7 @@ plugins:
     #  refreshToken: "your token"
 lavalink:
   plugins:
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.13.0"
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.13.2"
       snapshot: false
   server:
     password: "youshallnotpass"
